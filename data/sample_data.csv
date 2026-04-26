@@ -1,0 +1,16 @@
+id,name,salary_from,salary_to,salary_currency,experience,employment,schedule,city,company,description,skills,url
+1,Python Developer,150000,250000,RUR,between3And6,full,fullDay,Москва,Яндекс,Разработка backend сервисов,Python;FastAPI;PostgreSQL;Docker,https://hh.ru/vacancy/1
+2,Data Scientist,120000,200000,RUR,between1And3,full,fullDay,Москва,Сбер,ML модели для финтех,Python;sklearn;pandas;SQL,https://hh.ru/vacancy/2
+3,Backend Developer,100000,180000,RUR,noExperience,full,fullDay,Санкт-Петербург,VK,Разработка API,Python;Django;Redis,https://hh.ru/vacancy/3
+4,ML Engineer,200000,350000,RUR,moreThan6,full,fullDay,Москва,Тинькофф,Продуктовый ML,Python;PyTorch;Kubernetes;MLflow,https://hh.ru/vacancy/4
+5,Data Analyst,80000,130000,RUR,between1And3,full,fullDay,Казань,ГК Иннополис,Аналитика данных,SQL;Python;Tableau;Excel,https://hh.ru/vacancy/5
+6,DevOps Engineer,160000,270000,RUR,between3And6,full,remote,Москва,Озон,CI/CD инфраструктура,Docker;Kubernetes;Terraform;Jenkins,https://hh.ru/vacancy/6
+7,Frontend Developer,90000,150000,RUR,between1And3,full,fullDay,Новосибирск,2ГИС,React приложения,JavaScript;React;TypeScript;CSS,https://hh.ru/vacancy/7
+8,Data Engineer,140000,230000,RUR,between3And6,full,fullDay,Москва,Авито,Дата пайплайны,Python;Spark;Airflow;Kafka,https://hh.ru/vacancy/8
+9,Junior Python Developer,60000,100000,RUR,noExperience,full,fullDay,Екатеринбург,SKB Kontur,Разработка микросервисов,Python;Git;Linux,https://hh.ru/vacancy/9
+10,Senior Data Scientist,250000,400000,RUR,moreThan6,full,fullDay,Москва,Mail.ru,Руководство ML командой,Python;PyTorch;TensorFlow,https://hh.ru/vacancy/10
+11,Python разработчик,130000,,RUR,between3And6,full,fullDay,Москва,Ростелеком,Backend разработка,Python;Flask;PostgreSQL,https://hh.ru/vacancy/11
+12,Аналитик данных,70000,110000,RUR,noExperience,full,fullDay,Москва,Wildberries,Работа с данными,SQL;Excel;Python,https://hh.ru/vacancy/12
+13,MLOps Engineer,180000,300000,RUR,between3And6,full,remote,Санкт-Петербург,Газпромнефть,MLOps платформа,Python;Docker;Kubernetes;MLflow;Airflow,https://hh.ru/vacancy/13
+14,NLP Engineer,160000,280000,RUR,between1And3,full,fullDay,Москва,Сбер,NLP системы,Python;BERT;HuggingFace;PyTorch,https://hh.ru/vacancy/14
+15,Data Scientist,100000,170000,RUR,noExperience,full,fullDay,Нижний Новгород,ИТМО,Исследования в ML,Python;sklearn;numpy;pandas,https://hh.ru/vacancy/15
