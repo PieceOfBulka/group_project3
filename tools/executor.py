@@ -5,14 +5,6 @@ tools/executor.py
 import pandas as pd
 import numpy as np
 
-# Глобальный контекст с готовыми импортами — LLM не нужно их объявлять
-GLOBAL_CONTEXT = {
-    "pd": pd,
-    "np": np,
-    "__builtins__": __builtins__,
-}
-
-
 def clean_code(code: str) -> str:
     import re
     code = code.strip()
@@ -29,7 +21,7 @@ def clean_code(code: str) -> str:
 
 def exec_llm_code(code: str, local_vars: dict) -> dict:
     code = clean_code(code)
-    exec(compile(code, "<llm_generated>", "exec"), dict(GLOBAL_CONTEXT), local_vars)
+    exec(compile(code, "<llm_generated>", "exec"), local_vars)
     return local_vars
 
 
@@ -47,7 +39,8 @@ def exec_llm_code_with_retry(code: str, local_vars: dict, llm, max_retries: int 
             print('='*50)
             
             local_vars_copy = dict(original_vars)
-            exec(compile(code, "<llm_generated>", "exec"), dict(GLOBAL_CONTEXT), local_vars_copy)
+
+            exec(compile(code, "<llm_generated>", "exec"), local_vars_copy)
             local_vars.update(local_vars_copy)
             if attempt > 0:
                 print(f"✅ Исправлено за {attempt + 1} попытки")
