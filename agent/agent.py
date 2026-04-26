@@ -19,5 +19,12 @@ agent = create_react_agent(
 )
 
 if __name__ == '__main__':
-    answer = agent.invoke({'messages': [{'role':'user', 'content':'Напиши построение линейной регрессии'}]})
-    print(answer['messages'][-1].content)
+    while True:
+        print('======')
+        user_request = input('Введите свой запрос: ')
+        if user_request == 'quit':
+            break
+        answer = agent.invoke({'messages': [{'role':'user', 'content': user_request}]})
+        print('======')
+        print('Ответ агента:\n')
+        print(answer['messages'][-1].content)
