@@ -41,7 +41,6 @@ def parse_hh_vacancies(query: str = "Data Scientist Python") -> str:
         "columns": list(df.columns),
         "query": query,
         "source": HH_API_URL,
-        "pages_parsed": pages_to_parse,
         "message": f"Данные успешно получены: {len(df)} вакансий сохранено в {DATA_FILE}",
     }
 
