@@ -22,14 +22,12 @@ with st.sidebar:
         "LLM модель (агент)",
         [
             "meta-llama/llama-3.3-70b-instruct:free",
-            "deepseek/deepseek-v4-flash",
             "minimax/minimax-m2.7",
             "openai/gpt-oss-120b:free",
             "z-ai/glm-4.5-air:free",
-            "google/gemma-3-27b-it:free",
-            "minimax/minimax-m2.5:free",
         ],
     )
+    st.caption("⚠️ DeepSeek и Gemma не поддерживают tool use в ReAct агенте")
     st.divider()
     st.header("🎯 Вакансия для предсказания")
     vac_name = st.text_input("Название", value="Middle Python Developer")
