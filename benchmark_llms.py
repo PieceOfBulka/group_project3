@@ -22,7 +22,7 @@ MODELS = [
     {"name": "MiniMax M2.7", "id": "minimax/minimax-m2.7", "tier": "paid"},
 ]
 
-DATA_FILE = "data/vacancies.csv"
+DATA_FILE = "data/hh_it_5000_final.csv"
 
 PROMPTS = {
     "eda": (

@@ -35,7 +35,7 @@ SYSTEM_PROMPT = """Ты — опытный ML-инженер, специализ
 
 def get_model(model_name: str | None = None) -> ChatOpenAI:
     return ChatOpenAI(
-        model=model_name or os.getenv("MODEL_NAME", "minimax/minimax-m2.5:free"),
+        model=model_name or os.getenv("MODEL_NAME", "google/gemma-3-27b-it:free"),
         base_url="https://openrouter.ai/api/v1",
         api_key=os.getenv("API_KEY"),
         temperature=0.1,
@@ -43,7 +43,7 @@ def get_model(model_name: str | None = None) -> ChatOpenAI:
 
 
 def run(
-    csv_filepath: str = "data/vacancies.csv",
+    csv_filepath: str = "data/hh_it_5000_final.csv",
     target_vacancy: dict | None = None,
     model_name: str | None = None,
 ) -> str:
@@ -104,7 +104,7 @@ if __name__ == "__main__":
         "skills": "Python;FastAPI;PostgreSQL;Docker;Git",
     }
 
-    result = run(csv_filepath="data/vacancies.csv", target_vacancy=TARGET_VACANCY)
+    result = run(csv_filepath="data/hh_it_5000_final.csv", target_vacancy=TARGET_VACANCY)
     print("\n" + "=" * 60)
     print("📋 ФИНАЛЬНЫЙ ОТВЕТ АГЕНТА:")
     print("=" * 60)

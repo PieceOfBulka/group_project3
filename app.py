@@ -21,12 +21,12 @@ with st.sidebar:
     model_name = st.selectbox(
         "LLM модель (агент)",
         [
-            "minimax/minimax-m2.5:free",
+            "google/gemma-3-27b-it:free",
             "openai/gpt-oss-120b:free",
             "z-ai/glm-4.5-air:free",
-            "google/gemma-3-27b-it:free",
             "deepseek/deepseek-v4-flash",
             "minimax/minimax-m2.7",
+            "minimax/minimax-m2.5:free",
         ],
     )
     st.divider()
@@ -195,7 +195,7 @@ with tab_agent:
                                "best_model": None, "best_model_name": None, "model_results": None})
                 _STATE_REF = STATE
                 from agent import run
-                final = run(csv_filepath="data/vacancies.csv", target_vacancy=target_vacancy, model_name=model_name)
+                final = run(csv_filepath="data/hh_it_5000_final.csv", target_vacancy=target_vacancy, model_name=model_name)
                 log_queue.put(f"__DONE__{json.dumps({'result': final}, ensure_ascii=False)}")
             except Exception as e:
                 log_queue.put(f"__ERROR__{e}")

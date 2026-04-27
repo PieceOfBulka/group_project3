@@ -24,17 +24,17 @@ def preprocess_data(filepath: str) -> str:
     prompt = f"""Ты — опытный ML-инженер. Напиши Python-код для предобработки датасета вакансий с HH.ru.
 
 ФАЙЛ: {filepath}
+КОЛОНКИ: name, experience, employment, schedule, city, company, description, skills, category, level, salary_from, salary_to, salary
 
 ЗАДАЧА — выполни следующие шаги:
 
 1. ЗАГРУЗКА:
-   - Загрузи CSV с помощью pandas
+   - df = pd.read_csv("{filepath}")
 
 2. ЦЕЛЕВАЯ ПЕРЕМЕННАЯ (salary_target):
-   - Найди колонки с зарплатой (обычно salary_from, salary_to или salary)
-   - Если есть salary_from и salary_to — вычисли среднее (skipna=True)
-   - Если валюта USD — умножь на 90, EUR — на 100
-   - Удали строки где salary_target is NaN
+   - Если есть колонка "salary" и значение не NaN — используй её
+   - Иначе: среднее salary_from и salary_to (skipna=True)
+   - Удали строки где salary_target NaN
    - Сохрани в колонку "salary_target"
 
 3. ПРИЗНАК ИЗ ОПЫТА:
@@ -42,36 +42,43 @@ def preprocess_data(filepath: str) -> str:
    - Колонка: "experience_years"
 
 4. ПРИЗНАКИ ИЗ ГОРОДА:
-   - is_moscow, is_spb, is_top_city (топ: Москва, Санкт-Петербург, Новосибирск, Екатеринбург, Казань)
+   - is_moscow = (city == "Москва").astype(int)
+   - is_spb = (city == "Санкт-Петербург").astype(int)
+   - is_remote = (city.str.lower().str.contains("удалённо|удаленно", na=False)).astype(int)
+   - is_top_city: 1 если город в [Москва, Санкт-Петербург, Новосибирск, Екатеринбург, Казань]
 
 5. ЗАНЯТОСТЬ И ГРАФИК:
    - employment_score: full→1.0, part→0.5, project→0.5, иначе→1.0
    - schedule_score: fullDay→1.0, remote→0.7, flexible→0.8, иначе→1.0
 
-6. УРОВЕНЬ ПОЗИЦИИ (из колонки name):
-   - is_senior: senior/lead/старший/руководитель в названии (case-insensitive)
-   - is_junior: junior/intern/стажёр/младший в названии (case-insensitive)
+6. УРОВЕНЬ ПОЗИЦИИ:
+   - Из колонки "level" если есть: junior→0, middle→1, senior→2, lead→3, иначе→1
+   - Колонка: level_score
+   - is_senior: 1 если level в [senior, lead] или "senior"/"lead" в name (lower)
+   - is_junior: 1 если level == junior или "junior"/"intern" в name (lower)
 
-7. ПРИЗНАКИ ИЗ НАВЫКОВ:
-   - Разделитель может быть "," или ";"
-   - Бинарные колонки для: Python, SQL, Docker, Kubernetes, pandas, sklearn,
-     PyTorch, TensorFlow, JavaScript, React, Java, Go, Spark, Airflow,
-     PostgreSQL, Redis, Kafka, Git
-   - Имена колонок: skill_python, skill_sql, skill_docker и т.д. (lower)
-   - skills_count: общее количество навыков
+7. КАТЕГОРИЯ (из колонки category если есть):
+   - Закодируй через pd.get_dummies с prefix="cat", drop_first=True
 
-8. РЕЗУЛЬТАТ:
+8. ПРИЗНАКИ ИЗ НАВЫКОВ:
+   - Разделитель ";" или ","
+   - skills_count: количество навыков
+   - Бинарные: skill_python, skill_sql, skill_docker, skill_kubernetes,
+     skill_pytorch, skill_tensorflow, skill_javascript, skill_react,
+     skill_java, skill_go, skill_spark, skill_airflow, skill_postgresql,
+     skill_redis, skill_kafka, skill_git, skill_linux, skill_pandas
+
+9. РЕЗУЛЬТАТ:
    - `df_processed` — итоговый DataFrame
    - `feature_cols` — список признаков (исключи: salary_target, salary_from, salary_to,
      salary, id, url, description, name, company, city, experience, employment,
-     schedule, skills, salary_currency)
-   - `result` — словарь:
-     {{"status": "ok", "rows": int, "feature_cols": list,
+     schedule, skills, salary_currency, category, level)
+   - `result` — {{"status": "ok", "rows": int, "feature_cols": list,
        "salary_mean": float, "salary_min": float, "salary_max": float}}
 
 ВАЖНО:
 - import pandas as pd, import numpy as np
-- Все признаки-колонки заполняй 0 если исходной колонки нет в данных
+- Все признаки заполняй 0 если исходной колонки нет
 - Возвращай только Python-код без пояснений и без markdown-блоков
 """
 

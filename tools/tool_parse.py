@@ -11,7 +11,7 @@ from langchain_core.tools import tool
 
 
 HH_API_URL = "https://api.hh.ru/vacancies"
-DATA_FILE = "data/vacancies.csv"
+DATA_FILE = "data/hh_it_5000_final.csv"
 
 
 @tool
