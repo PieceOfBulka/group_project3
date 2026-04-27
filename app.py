@@ -55,12 +55,12 @@ with tab_agent:
         ("generate_report", "Генерация отчёта"),
     ]
 
-    for key in ["log_lines", "running", "done", "result", "report_path", "step_status"]:
+    for key in ["log_lines", "running", "done", "result", "report_path", "step_status", "model_results", "best_model_name"]:
         if key not in st.session_state:
             st.session_state[key] = (
                 [] if key == "log_lines" else
                 False if key in ("running", "done") else
-                None if key in ("result", "report_path") else
+                None if key in ("result", "report_path", "model_results", "best_model_name") else
                 {k: "pending" for k, _ in STEPS}
             )
 
@@ -97,6 +97,59 @@ with tab_agent:
             st.divider()
             st.subheader("📊 Финальный ответ агента")
             st.markdown(st.session_state.result)
+
+        if st.session_state.model_results:
+            st.divider()
+            st.subheader("💾 Сохранение модели")
+
+            import pickle, io
+            results = st.session_state.model_results
+            best_name = st.session_state.best_model_name
+
+            df_models = pd.DataFrame(results)[["name", "mae", "rmse", "r2"]]
+            df_models.columns = ["Модель", "MAE", "RMSE", "R²"]
+            df_models["MAE"] = df_models["MAE"].apply(lambda x: f"{x:,.0f} ₽")
+            df_models["RMSE"] = df_models["RMSE"].apply(lambda x: f"{x:,.0f} ₽")
+            df_models["R²"] = df_models["R²"].apply(lambda x: f"{x:.4f}")
+            df_models.insert(0, "🏆", df_models["Модель"].apply(lambda x: "✅" if x == best_name else ""))
+            st.dataframe(df_models, use_container_width=True, hide_index=True)
+
+            save_col1, save_col2 = st.columns([2, 1])
+            with save_col1:
+                model_to_save = st.selectbox(
+                    "Выбери модель для сохранения",
+                    options=[r["name"] for r in results],
+                    index=next((i for i, r in enumerate(results) if r["name"] == best_name), 0),
+                    key="model_select",
+                )
+                save_path = st.text_input("Путь для сохранения", value=f"memory/{model_to_save.replace(' ', '_').lower()}.pkl", key="save_path")
+
+            with save_col2:
+                st.write("")
+                st.write("")
+                if st.button("💾 Сохранить в файл", use_container_width=True):
+                    from tools.state import STATE as _S2
+                    model_obj = _S2.get("best_model")
+                    if model_obj is not None:
+                        os.makedirs(os.path.dirname(save_path) if os.path.dirname(save_path) else ".", exist_ok=True)
+                        with open(save_path, "wb") as f:
+                            pickle.dump(model_obj, f)
+                        st.success(f"Сохранено: `{save_path}`")
+                    else:
+                        st.error("Модель не найдена в памяти агента")
+
+                from tools.state import STATE as _S3
+                model_obj = _S3.get("best_model")
+                if model_obj is not None:
+                    buf = io.BytesIO()
+                    pickle.dump(model_obj, buf)
+                    buf.seek(0)
+                    fname = f"{best_name.replace(' ', '_').lower()}.pkl" if best_name else "model.pkl"
+                    st.download_button("⬇ Скачать .pkl", buf, file_name=fname, mime="application/octet-stream", use_container_width=True)
+
+            pkl_files = sorted(glob.glob("memory/*.pkl"))
+            if pkl_files:
+                st.caption(f"📁 Сохранённые модели: {', '.join(os.path.basename(p) for p in pkl_files)}")
 
         if st.session_state.report_path and os.path.exists(st.session_state.report_path):
             with open(st.session_state.report_path, encoding="utf-8") as f:
@@ -140,6 +193,7 @@ with tab_agent:
                 from tools.state import STATE
                 STATE.update({"action_history": [], "df_processed": None, "feature_cols": None,
                                "best_model": None, "best_model_name": None, "model_results": None})
+                _STATE_REF = STATE
                 from agent import run
                 final = run(csv_filepath="data/vacancies.csv", target_vacancy=target_vacancy, model_name=model_name)
                 log_queue.put(f"__DONE__{json.dumps({'result': final}, ensure_ascii=False)}")
@@ -176,6 +230,9 @@ with tab_agent:
                 reports = sorted(glob.glob("reports/report_*.html"))
                 if reports:
                     st.session_state.report_path = reports[-1]
+                from tools.state import STATE as _S
+                st.session_state.model_results = _S.get("model_results")
+                st.session_state.best_model_name = _S.get("best_model_name")
                 break
             elif line.startswith("__ERROR__"):
                 st.session_state.log_lines.append(f"❌ ОШИБКА: {line[9:]}")
