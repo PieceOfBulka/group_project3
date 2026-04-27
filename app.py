@@ -48,7 +48,7 @@ with tab_agent:
     st.caption("Агент автономно парсит данные, обучает модели и предсказывает зарплату")
 
     STEPS = [
-        ("parse_hh_vacancies", "Парсинг HH.ru"),
+        ("parse_hh_vacancies", "Парсинг HH.ru (демо)"),
         ("load_and_explore_data", "Загрузка и EDA"),
         ("preprocess_data", "Предобработка + Feature Engineering"),
         ("train_and_compare_models", "Обучение моделей"),
@@ -205,8 +205,11 @@ with tab_agent:
         thread = threading.Thread(target=run_agent, daemon=True)
         thread.start()
 
+        st.session_state.step_status["parse_hh_vacancies"] = "done"
+        render_steps()
+
         STEP_KEYWORDS = {
-            "parse_hh_vacancies": ["Парсинг завершён", "Подключаюсь к HH"],
+            "parse_hh_vacancies": [],
             "load_and_explore_data": ["Загружено", "load_and_explore"],
             "preprocess_data": ["Обработано", "preprocess_data"],
             "train_and_compare_models": ["Лучшая:", "train_and_compare"],

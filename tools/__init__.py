@@ -10,7 +10,6 @@ from tools.tool_predict import predict_salary
 from tools.tool_report import generate_report
 
 ALL_TOOLS = [
-    parse_hh_vacancies,
     load_and_explore_data,
     preprocess_data,
     train_and_compare_models,

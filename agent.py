@@ -11,6 +11,7 @@ from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
 
 from tools import ALL_TOOLS
+from tools.tool_parse import parse_hh_vacancies
 
 load_dotenv()
 
@@ -18,12 +19,11 @@ SYSTEM_PROMPT = """Ты — опытный ML-инженер, специализ
 Твоя задача — автономно выполнить полный пайплайн ML для предсказания зарплат по вакансиям HH.ru.
 
 Используй инструменты СТРОГО по порядку:
-1. parse_hh_vacancies(query) — собери данные с HH.ru
-2. load_and_explore_data(filepath) — изучи загруженные данные
-3. preprocess_data(filepath) — предобработай данные и выполни Feature Engineering
-4. train_and_compare_models(dummy="") — обучи и сравни 3 ML-модели, сохрани лучшую
-5. predict_salary(vacancy_json) — предскажи зарплату для целевой вакансии
-6. generate_report(dummy="") — сформируй HTML-отчёт с метриками и выводами
+1. load_and_explore_data(filepath) — изучи загруженные данные
+2. preprocess_data(filepath) — предобработай данные и выполни Feature Engineering
+3. train_and_compare_models(dummy="") — обучи и сравни 3 ML-модели, сохрани лучшую
+4. predict_salary(vacancy_json) — предскажи зарплату для целевой вакансии
+5. generate_report(dummy="") — сформируй HTML-отчёт с метриками и выводами
 
 После каждого шага кратко объясни результат по-русски.
 Используй цепочку мыслей (Chain-of-Thought): перед каждым действием объясни, ПОЧЕМУ выбираешь именно этот инструмент.
@@ -57,17 +57,19 @@ def run(
             "skills": "Python;FastAPI;PostgreSQL;Docker;Git",
         }
 
+    print("🌐 Шаг 0: Парсинг HH.ru (демо)...")
+    parse_hh_vacancies.invoke({"query": "Data Scientist Python ML Engineer"})
+
     llm = get_model(model_name)
     agent = create_react_agent(llm, ALL_TOOLS, prompt=SYSTEM_PROMPT)
 
     user_message = f"""Выполни полный ML-пайплайн для предсказания зарплат:
 
-1. Спарси данные с HH.ru (query="Data Scientist Python ML Engineer")
-2. Загрузи и изучи данные: {csv_filepath}
-3. Предобработай данные: {csv_filepath}
-4. Обучи и сравни модели
-5. Предскажи зарплату для вакансии: {json.dumps(target_vacancy, ensure_ascii=False)}
-6. Сформируй финальный отчёт
+1. Загрузи и изучи данные: {csv_filepath}
+2. Предобработай данные: {csv_filepath}
+3. Обучи и сравни модели
+4. Предскажи зарплату для вакансии: {json.dumps(target_vacancy, ensure_ascii=False)}
+5. Сформируй финальный отчёт
 
 Целевая вакансия для предсказания:
 {json.dumps(target_vacancy, ensure_ascii=False, indent=2)}"""
