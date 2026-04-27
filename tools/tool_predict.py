@@ -9,7 +9,7 @@ from langchain_core.tools import tool
 
 from tools.llm import get_llm
 from tools.executor import exec_llm_code_with_retry
-from tools.state import STATE
+from tools.state import STATE, log_action
 
 
 @tool
@@ -77,6 +77,7 @@ import pandas as pd
         prediction = model.predict(features_df[feature_cols].values)[0]
         rounded = round(prediction / 5000) * 5000
 
+        log_action("predict_salary", f"{vacancy.get('name','?')} → {rounded:,.0f} ₽")
         return json.dumps({
             "status": "ok",
             "vacancy_name": vacancy.get("name", "Вакансия"),

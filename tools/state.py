@@ -1,13 +1,23 @@
 """
 tools/state.py
-Общее состояние между шагами пайплайна.
-Все tools читают и пишут сюда.
+Общее состояние между шагами пайплайна (кратковременная память агента).
 """
- 
+
+from datetime import datetime
+
 STATE = {
-    "df_processed": None,   # DataFrame после предобработки
-    "feature_cols": None,   # список признаков
-    "best_model": None,     # обученная лучшая модель
+    "df_processed": None,
+    "feature_cols": None,
+    "best_model": None,
     "best_model_name": None,
-    "model_results": None,  # результаты всех трёх моделей
+    "model_results": None,
+    "action_history": [],
 }
+
+
+def log_action(tool_name: str, summary: str = ""):
+    STATE["action_history"].append({
+        "tool": tool_name,
+        "summary": summary,
+        "time": datetime.now().strftime("%H:%M:%S"),
+    })

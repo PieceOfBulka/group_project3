@@ -1,4 +1,7 @@
-dotenv
-
+python-dotenv
 langgraph
 langchain_openai
+langchain-core
+scikit-learn
+pandas
+numpy

@@ -7,9 +7,14 @@ import json
 import traceback
 from langchain_core.tools import tool
 
+import os
+import pickle
+
 from tools.llm import get_llm
 from tools.executor import exec_llm_code_with_retry
-from tools.state import STATE
+from tools.state import STATE, log_action
+
+MEMORY_DIR = "memory"
 
 
 @tool
@@ -87,6 +92,33 @@ import numpy as np
         STATE["best_model_name"] = local_vars["best_model_name"]
         STATE["model_results"] = local_vars["model_results"]
 
-        return json.dumps(local_vars.get("result", {}), ensure_ascii=False, default=str)
+        result = local_vars.get("result", {})
+
+        os.makedirs(MEMORY_DIR, exist_ok=True)
+        model_path = os.path.join(MEMORY_DIR, "best_model.pkl")
+        prev_mae = float("inf")
+        if os.path.exists(model_path):
+            try:
+                with open(os.path.join(MEMORY_DIR, "best_metrics.json")) as f:
+                    import json as _json
+                    prev = _json.load(f)
+                    prev_mae = prev.get("best_mae", float("inf"))
+            except Exception:
+                pass
+
+        current_mae = result.get("best_mae", float("inf"))
+        if current_mae < prev_mae:
+            with open(model_path, "wb") as f:
+                pickle.dump(local_vars["best_model"], f)
+            result["model_saved"] = True
+            result["previous_mae"] = prev_mae
+            result["improvement"] = prev_mae - current_mae
+        else:
+            result["model_saved"] = False
+            result["previous_mae"] = prev_mae
+
+        log_action("train_and_compare_models",
+                   f"Лучшая: {local_vars['best_model_name']}, MAE={current_mae:,.0f}")
+        return json.dumps(result, ensure_ascii=False, default=str)
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e), "traceback": traceback.format_exc()})

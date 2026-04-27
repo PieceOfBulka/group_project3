@@ -9,7 +9,7 @@ from langchain_core.tools import tool
 
 from tools.llm import get_llm
 from tools.executor import exec_llm_code_with_retry
-from tools.state import STATE
+from tools.state import STATE, log_action
 
 
 @tool
@@ -86,6 +86,7 @@ def preprocess_data(filepath: str) -> str:
 
         result = local_vars.get("result", {})
         result["feature_cols"] = local_vars["feature_cols"]
+        log_action("preprocess_data", f"Обработано {result.get('rows','?')} строк, {len(local_vars['feature_cols'])} признаков")
         return json.dumps(result, ensure_ascii=False, default=str)
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e), "traceback": traceback.format_exc()})
