@@ -8,7 +8,9 @@ import json
 import time
 import os
 from langchain_core.tools import tool
+from tools.logger import get_logger
 
+logger = get_logger("tool.parse")
 
 HH_API_URL = "https://api.hh.ru/vacancies"
 DATA_FILE = "data/hh_it_5000_final.csv"
@@ -21,6 +23,7 @@ def parse_hh_vacancies(query: str = "Data Scientist Python") -> str:
     Возвращает путь к сохранённому файлу с данными.
     Аргумент query: поисковый запрос (например, 'Data Scientist Python').
     """
+    logger.info(f"Парсинг HH.ru | query='{query}'")
     print(f"\n🌐 Подключаюсь к HH.ru API: {HH_API_URL}")
     print(f"🔍 Поисковый запрос: '{query}'")
 
@@ -36,6 +39,7 @@ def parse_hh_vacancies(query: str = "Data Scientist Python") -> str:
     time.sleep(0.2)
 
     if not os.path.exists(DATA_FILE):
+        logger.error(f"Файл не найден: {DATA_FILE}")
         return json.dumps({
             "status": "error",
             "message": f"Файл {DATA_FILE} не найден. Запустите generate_data.py",
@@ -57,5 +61,6 @@ def parse_hh_vacancies(query: str = "Data Scientist Python") -> str:
 
     from tools.state import log_action
     log_action("parse_hh_vacancies", f"Получено {len(df)} вакансий из {DATA_FILE}")
+    logger.info(f"Парсинг завершён | rows={len(df)} | file={DATA_FILE}")
     print(f"   ✅ Парсинг завершён: {len(df)} вакансий")
     return json.dumps(result, ensure_ascii=False, default=str)

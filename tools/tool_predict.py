@@ -10,6 +10,9 @@ from langchain_core.tools import tool
 from tools.llm import get_llm
 from tools.executor import exec_llm_code_with_retry
 from tools.state import STATE, log_action
+from tools.logger import get_logger
+
+logger = get_logger("tool.predict")
 
 
 @tool
@@ -25,7 +28,9 @@ def predict_salary(vacancy_json: str) -> str:
 
     Поля experience: noExperience | between1And3 | between3And6 | moreThan6
     """
+    logger.info(f"Предсказание зарплаты | vacancy={vacancy_json[:80]}")
     if STATE["best_model"] is None:
+        logger.error("best_model не найден в STATE")
         return json.dumps({"status": "error", "message": "Сначала вызови train_and_compare_models"})
 
     model = STATE["best_model"]
@@ -78,6 +83,7 @@ import pandas as pd
         rounded = round(prediction / 5000) * 5000
 
         log_action("predict_salary", f"{vacancy.get('name','?')} → {rounded:,.0f} ₽")
+        logger.info(f"Предсказание: {vacancy.get('name','?')} → {rounded:,.0f} ₽ (модель: {model_name})")
         return json.dumps({
             "status": "ok",
             "vacancy_name": vacancy.get("name", "Вакансия"),
@@ -86,4 +92,5 @@ import pandas as pd
             "predicted_salary_formatted": f"{rounded:,.0f} ₽".replace(",", " "),
         }, ensure_ascii=False)
     except Exception as e:
+        logger.error(f"Предсказание ошибка | {e}", exc_info=True)
         return json.dumps({"status": "error", "message": str(e), "traceback": traceback.format_exc()})

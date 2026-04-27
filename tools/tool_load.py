@@ -10,6 +10,9 @@ from langchain_core.tools import tool
 from tools.llm import get_llm
 from tools.executor import exec_llm_code_with_retry
 from tools.state import log_action
+from tools.logger import get_logger
+
+logger = get_logger("tool.load")
 
 
 @tool
@@ -18,6 +21,7 @@ def load_and_explore_data(filepath: str) -> str:
     Загружает CSV файл с вакансиями HH.ru и возвращает подробную статистику.
     Используй этот tool первым. Аргумент: filepath — путь к CSV файлу.
     """
+    logger.info(f"EDA | filepath={filepath}")
     llm = get_llm()
 
     prompt = f"""Ты — Data Engineer. Напиши Python-код для загрузки и анализа CSV файла с вакансиями HH.ru.
@@ -46,6 +50,8 @@ def load_and_explore_data(filepath: str) -> str:
         exec_llm_code_with_retry(response.content, local_vars, llm)
         result = local_vars.get("result", {})
         log_action("load_and_explore_data", f"Загружено {result.get('rows', '?')} строк, {len(result.get('columns', []))} колонок")
+        logger.info(f"EDA завершён | rows={result.get('rows','?')} | cols={len(result.get('columns',[]))}")
         return json.dumps(result, ensure_ascii=False, default=str)
     except Exception as e:
+        logger.error(f"EDA ошибка | {e}", exc_info=True)
         return json.dumps({"status": "error", "message": str(e), "traceback": traceback.format_exc()})

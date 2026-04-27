@@ -4,6 +4,9 @@ tools/executor.py
 """
 import pandas as pd
 import numpy as np
+from tools.logger import get_logger
+
+logger = get_logger("executor")
 
 def clean_code(code: str) -> str:
     import re
@@ -47,9 +50,11 @@ def exec_llm_code_with_retry(code: str, local_vars: dict, llm, max_retries: int 
             return local_vars
         except Exception as e:
             error_msg = traceback.format_exc()
+            logger.warning(f"Попытка {attempt+1}/{max_retries} | ошибка: {e}")
             print(f"⚠️  Попытка {attempt + 1}/{max_retries} — ошибка: {e}")
 
             if attempt == max_retries - 1:
+                logger.error(f"Код не исправлен за {max_retries} попытки | {e}")
                 raise
 
             fix_prompt = f"""Этот Python-код содержит ошибку. Исправь её и верни только исправленный код.
@@ -66,6 +71,7 @@ def exec_llm_code_with_retry(code: str, local_vars: dict, llm, max_retries: int 
 """
             response = llm.invoke(fix_prompt)
             code = clean_code(response.content)
+            logger.info(f"LLM исправила код, попытка {attempt+2}")
             print(f"🔄 LLM исправила код, повторяю...")
 
     return local_vars

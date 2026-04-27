@@ -13,6 +13,9 @@ import pickle
 from tools.llm import get_llm
 from tools.executor import exec_llm_code_with_retry
 from tools.state import STATE, log_action
+from tools.logger import get_logger
+
+logger = get_logger("tool.train")
 
 MEMORY_DIR = "memory"
 
@@ -24,7 +27,9 @@ def train_and_compare_models(dummy: str = "") -> str:
     сравнивает их по MAE/RMSE/R² и выбирает лучшую.
     Вызывай после preprocess_data. Аргумент dummy можно передать пустым "".
     """
+    logger.info("Начало обучения моделей")
     if STATE["df_processed"] is None:
+        logger.error("df_processed не найден в STATE — preprocess_data не был вызван")
         return json.dumps({"status": "error", "message": "Сначала вызови preprocess_data"})
 
     df = STATE["df_processed"]
@@ -119,6 +124,10 @@ import numpy as np
 
         log_action("train_and_compare_models",
                    f"Лучшая: {local_vars['best_model_name']}, MAE={current_mae:,.0f}")
+        logger.info(f"Обучение завершено | best={local_vars['best_model_name']} | MAE={current_mae:,.0f} | R2={result.get('best_r2',0):.4f} | saved={result.get('model_saved')}")
+        for m in local_vars.get("model_results", []):
+            logger.info(f"  Модель: {m['name']} | MAE={m['mae']:,.0f} | RMSE={m['rmse']:,.0f} | R2={m['r2']:.4f}")
         return json.dumps(result, ensure_ascii=False, default=str)
     except Exception as e:
+        logger.error(f"Обучение ошибка | {e}", exc_info=True)
         return json.dumps({"status": "error", "message": str(e), "traceback": traceback.format_exc()})

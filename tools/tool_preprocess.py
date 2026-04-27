@@ -10,6 +10,9 @@ from langchain_core.tools import tool
 from tools.llm import get_llm
 from tools.executor import exec_llm_code_with_retry
 from tools.state import STATE, log_action
+from tools.logger import get_logger
+
+logger = get_logger("tool.preprocess")
 
 
 @tool
@@ -82,6 +85,7 @@ def preprocess_data(filepath: str) -> str:
 - Возвращай только Python-код без пояснений и без markdown-блоков
 """
 
+    logger.info(f"Предобработка | filepath={filepath}")
     response = llm.invoke(prompt)
 
     try:
@@ -94,6 +98,8 @@ def preprocess_data(filepath: str) -> str:
         result = local_vars.get("result", {})
         result["feature_cols"] = local_vars["feature_cols"]
         log_action("preprocess_data", f"Обработано {result.get('rows','?')} строк, {len(local_vars['feature_cols'])} признаков")
+        logger.info(f"Предобработка завершена | rows={result.get('rows','?')} | features={len(local_vars['feature_cols'])} | salary_mean={result.get('salary_mean','?'):.0f}")
         return json.dumps(result, ensure_ascii=False, default=str)
     except Exception as e:
+        logger.error(f"Предобработка ошибка | {e}", exc_info=True)
         return json.dumps({"status": "error", "message": str(e), "traceback": traceback.format_exc()})

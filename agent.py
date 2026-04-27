@@ -12,6 +12,9 @@ from langgraph.prebuilt import create_react_agent
 
 from tools import ALL_TOOLS
 from tools.tool_parse import parse_hh_vacancies
+from tools.logger import get_logger
+
+logger = get_logger("agent")
 
 load_dotenv()
 
@@ -62,6 +65,7 @@ def run(
             "skills": "Python;FastAPI;PostgreSQL;Docker;Git",
         }
 
+    logger.info(f"Запуск агента | model={model_name or os.getenv('MODEL_NAME')} | file={csv_filepath}")
     print("🌐 Шаг 0: Парсинг HH.ru (демо)...")
     parse_hh_vacancies.invoke({"query": "Data Scientist Python ML Engineer"})
 
@@ -89,6 +93,7 @@ def run(
                 if hasattr(msg, "tool_calls") and msg.tool_calls:
                     for tc in msg.tool_calls:
                         args_preview = str(tc.get("args", ""))[:80]
+                        logger.info(f"Tool call: {tc['name']} | args={args_preview}")
                         print(f"🔧 Tool: {tc['name']}({args_preview})")
                 elif msg.content:
                     print(f"\n🤖 Агент:\n{msg.content}\n")
@@ -96,8 +101,10 @@ def run(
             elif key == "tools":
                 msg = value["messages"][-1]
                 preview = msg.content[:200].replace("\n", " ")
+                logger.info(f"Tool result: {preview}")
                 print(f"✅ Результат: {preview}...\n")
 
+    logger.info("Агент завершил работу")
     return final_content
 
 
