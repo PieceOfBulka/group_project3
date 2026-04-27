@@ -277,10 +277,14 @@ with tab_benchmark:
     st.caption("Каждая модель проходит 3 задачи: EDA, предобработка, обучение моделей")
 
     BENCH_MODELS = [
+        {"name": "Llama 3.3 70B", "id": "meta-llama/llama-3.3-70b-instruct:free", "tier": "🆓 free"},
         {"name": "GPT-OSS 120B", "id": "openai/gpt-oss-120b:free", "tier": "🆓 free"},
         {"name": "GLM-4.5 Air", "id": "z-ai/glm-4.5-air:free", "tier": "🆓 free"},
-        {"name": "DeepSeek V4 Flash", "id": "deepseek/deepseek-v4-flash", "tier": "💰 paid"},
+        {"name": "MiniMax M2.5", "id": "minimax/minimax-m2.5", "tier": "💰 paid"},
         {"name": "MiniMax M2.7", "id": "minimax/minimax-m2.7", "tier": "💰 paid"},
+        {"name": "Kimi K2.5", "id": "moonshotai/kimi-k2.5", "tier": "💰 paid"},
+        {"name": "Qwen3 Coder", "id": "qwen/qwen3-coder", "tier": "💰 paid"},
+        {"name": "DeepSeek V4 Flash", "id": "deepseek/deepseek-v4-flash", "tier": "💰 paid"},
     ]
 
     b_col1, b_col2 = st.columns([1, 2])
