@@ -23,6 +23,9 @@ with st.sidebar:
         [
             "meta-llama/llama-3.3-70b-instruct:free",
             "minimax/minimax-m2.7",
+            "minimax/minimax-m2.5",
+            "moonshotai/kimi-k2.5",
+            "qwen/qwen3-coder",
             "openai/gpt-oss-120b:free",
             "z-ai/glm-4.5-air:free",
         ],
