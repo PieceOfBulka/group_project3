@@ -1,2 +1,4 @@
 .env
 .DS_Storelogs/
+.claude/worktrees/
+.claude
