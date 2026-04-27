@@ -14,9 +14,10 @@ load_dotenv()
 st.set_page_config(page_title="ML Агент — Зарплаты HH.ru", page_icon="🤖", layout="wide")
 
 # ── сайдбар ──────────────────────────────────────────────────────────────────
+api_key = os.getenv("API_KEY", "")
+
 with st.sidebar:
     st.header("⚙️ Настройки")
-    api_key = st.text_input("OpenRouter API Key", value=os.getenv("API_KEY", ""), type="password")
     model_name = st.selectbox(
         "LLM модель (агент)",
         [
@@ -160,10 +161,9 @@ with tab_agent:
 
     if run_btn:
         if not api_key:
-            st.error("Введи API Key в боковой панели")
+            st.error("API_KEY не найден. Добавь его в .env файл")
             st.stop()
 
-        os.environ["API_KEY"] = api_key
         os.environ["MODEL_NAME"] = model_name
 
         target_vacancy = {
@@ -280,7 +280,6 @@ with tab_benchmark:
 
     b_col1, b_col2 = st.columns([1, 2])
     with b_col1:
-        b_api_key = st.text_input("API Key", value=os.getenv("API_KEY", ""), type="password", key="bench_key")
         selected_models = st.multiselect(
             "Модели для тестирования",
             options=[m["id"] for m in BENCH_MODELS],
@@ -302,10 +301,9 @@ with tab_benchmark:
     CSV_PATH = "llm_comparison.csv"
 
     if run_bench:
-        if not b_api_key:
-            st.error("Введи API Key")
+        if not api_key:
+            st.error("API_KEY не найден. Добавь его в .env файл")
         else:
-            os.environ["API_KEY"] = b_api_key
             progress = st.progress(0)
             status_txt = st.empty()
             results_placeholder = st.empty()
