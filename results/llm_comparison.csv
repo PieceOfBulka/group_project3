@@ -1,0 +1,4 @@
+model_name,model_id,tier,timestamp,eda_ok,eda_retries,eda_time_sec,eda_rows_detected,eda_error,preprocess_ok,preprocess_retries,preprocess_time_sec,preprocess_rows,salary_mean,preprocess_error,train_ok,train_retries,train_time_sec,best_model,best_mae,best_rmse,best_r2,train_error,total_retries,total_time_sec,tasks_passed,success_rate_pct,error
+MiniMax M2.7,minimax/minimax-m2.7,💰 paid,2026-04-28 00:23:11,1,0,7.29,5000,,1,0,32.36,5000,158343.0,,1,0,28.85,RandomForest,53721.0,71656.0,0.3074,,0,68.5,3,100.0,
+Kimi K2.5,moonshotai/kimi-k2.5,💰 paid,2026-04-28 00:24:20,1,0,24.2,5000,,1,0,97.69,5000,158343.0,,1,0,36.87,RandomForest,53711.0,71649.0,0.3076,,0,158.76,3,100.0,
+Qwen3 Coder,qwen/qwen3-coder,💰 paid,2026-04-28 00:26:58,1,0,3.36,5000,,1,0,4.66,5000,158343.0,,1,0,3.92,RandomForest,53711.0,71649.0,0.3076,,0,11.94,3,100.0,
