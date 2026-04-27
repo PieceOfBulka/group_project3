@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Отчёт ML Агента — Предсказание зарплат HH.ru</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #333; }
+  h1 { color: #1a56db; }
+  h2 { color: #1e429f; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th { background: #1a56db; color: white; padding: 10px; text-align: left; }
+  td { padding: 10px; border-bottom: 1px solid #e5e7eb; }
+  tr:hover { background: #f9fafb; }
+  .badge { background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; }
+  .meta { color: #6b7280; font-size: 0.9em; }
+  .highlight { background: #eff6ff; padding: 16px; border-radius: 8px; border-left: 4px solid #1a56db; }
+</style>
+</head>
+<body>
+<h1>📊 Отчёт ML Агента: Предсказание зарплат HH.ru</h1>
+<p class="meta">Сгенерирован: 2026-04-28 00:14:35 | Run ID: 20260428_001435</p>
+
+<h2>🤖 Сравнение ML-моделей</h2>
+<table>
+  <thead><tr><th>Модель</th><th>MAE</th><th>RMSE</th><th>R²</th></tr></thead>
+  <tbody>
+        <tr>
+            <td><b>RandomForest 🏆</b></td>
+            <td>46,388 ₽</td>
+            <td>63,012 ₽</td>
+            <td>0.4573</td>
+        </tr>
+        <tr>
+            <td><b>GradientBoosting</b></td>
+            <td>46,700 ₽</td>
+            <td>62,689 ₽</td>
+            <td>0.4628</td>
+        </tr>
+        <tr>
+            <td><b>Ridge</b></td>
+            <td>49,547 ₽</td>
+            <td>66,041 ₽</td>
+            <td>0.4038</td>
+        </tr></tbody>
+</table>
+
+<div class="highlight">
+  <b>Лучшая модель:</b> RandomForest<br>
+  MAE = 46,388 ₽ | RMSE = 63,012 ₽ | R² = 0.4573
+</div>
+
+<h2>📈 Сравнение с предыдущим запуском</h2>
+<p>Первый запуск — предыдущих результатов нет.</p>
+
+<h2>🔍 История действий агента (кратковременная память)</h2>
+<ol><li><b>parse_hh_vacancies</b> — 00:13:31</li><li><b>load_and_explore_data</b> — 00:13:38</li><li><b>preprocess_data</b> — 00:13:42</li><li><b>train_and_compare_models</b> — 00:13:54</li><li><b>predict_salary</b> — 00:14:33</li></ol>
+
+<h2>💡 Бизнес-выводы</h2>
+<ul>
+  <li>Средняя ошибка предсказания зарплаты составляет ~46,388 ₽ — приемлемо для HR-аналитики.</li>
+  <li>Модель RandomForest показала лучший результат среди трёх протестированных.</li>
+  <li>R² = 0.46: модель объясняет 46% дисперсии зарплат.</li>
+  <li>Ключевые факторы: опыт работы, город, стек технологий.</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,233 @@
+2026-04-28 00:04:21 | INFO     | test | ok
+2026-04-28 00:05:18 | INFO     | agent | Запуск агента | model=z-ai/glm-4.5-air:free | file=data/hh_it_5000_final.csv
+2026-04-28 00:05:18 | INFO     | tool.parse | Парсинг HH.ru | query='Data Scientist Python ML Engineer'
+2026-04-28 00:05:18 | INFO     | tool.parse | Парсинг завершён | rows=5000 | file=data/hh_it_5000_final.csv
+2026-04-28 00:05:18 | INFO     | langchain_openai.chat_models._client_utils | langchain-openai detected system proxy configuration and no explicit `http_socket_options` / `http_client` / `http_async_client` / `openai_proxy`; skipping the custom `httpx` transport so httpx's env-proxy auto-detection applies. Pass `http_socket_options=[...]` to opt back into kernel-level TCP keepalive tuning on top of the env proxy.
+2026-04-28 00:05:27 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:05:34 | INFO     | agent | Tool call: load_and_explore_data | args={'filepath': 'data/hh_it_5000_final.csv'}
+2026-04-28 00:05:34 | INFO     | tool.load | EDA | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:05:37 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:05:46 | INFO     | tool.load | EDA завершён | rows=5000 | cols=13
+2026-04-28 00:05:46 | INFO     | agent | Tool result: {"rows": 5000, "columns": ["name", "experience", "employment", "schedule", "city", "company", "description", "skills", "category", "level", "salary_from", "salary_to", "salary"], "salary_columns": ["s
+2026-04-28 00:05:56 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:06:00 | INFO     | agent | Tool call: preprocess_data | args={'filepath': 'data/hh_it_5000_final.csv'}
+2026-04-28 00:06:00 | INFO     | tool.preprocess | Предобработка | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:06:10 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:06:47 | WARNING  | executor | Попытка 1/3 | ошибка: argument of type 'float' is not iterable
+2026-04-28 00:06:51 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:08:10 | INFO     | executor | LLM исправила код, попытка 2
+2026-04-28 00:08:10 | WARNING  | executor | Попытка 2/3 | ошибка: "value" parameter must be a scalar or dict, but you passed a "list"
+2026-04-28 00:08:15 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:09:46 | INFO     | executor | LLM исправила код, попытка 3
+2026-04-28 00:09:47 | WARNING  | executor | Попытка 3/3 | ошибка: 'salary_target'
+2026-04-28 00:09:47 | ERROR    | executor | Код не исправлен за 3 попытки | 'salary_target'
+2026-04-28 00:09:47 | ERROR    | tool.preprocess | Предобработка ошибка | 'salary_target'
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\smadimo\hse_smadimo_gp3\.venv\Lib\site-packages\pandas\core\indexes\base.py", line 3641, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas/_libs/index.pyx", line 168, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 197, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7668, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7676, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'salary_target'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\smadimo\hse_smadimo_gp3\tools\tool_preprocess.py", line 93, in preprocess_data
+    exec_llm_code_with_retry(response.content, local_vars, llm)
+  File "C:\Users\Asus\PycharmProjects\smadimo\hse_smadimo_gp3\tools\executor.py", line 46, in exec_llm_code_with_retry
+    exec(compile(code, "<llm_generated>", "exec"), local_vars_copy)
+  File "<llm_generated>", line 87, in <module>
+  File "C:\Users\Asus\PycharmProjects\smadimo\hse_smadimo_gp3\.venv\Lib\site-packages\pandas\core\frame.py", line 4378, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\PycharmProjects\smadimo\hse_smadimo_gp3\.venv\Lib\site-packages\pandas\core\indexes\base.py", line 3648, in get_loc
+    raise KeyError(key) from err
+KeyError: 'salary_target'
+2026-04-28 00:09:47 | INFO     | agent | Tool result: {"status": "error", "message": "'salary_target'", "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Asus\\PycharmProjects\\smadimo\\hse_smadimo_gp3\\.venv\\Lib\\site-packages\\pand
+2026-04-28 00:09:57 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:09:58 | INFO     | agent | Tool call: preprocess_data | args={'filepath': 'data/hh_it_5000_final.csv'}
+2026-04-28 00:09:58 | INFO     | tool.preprocess | Предобработка | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:10:07 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:10:46 | WARNING  | executor | Попытка 1/3 | ошибка: argument of type 'float' is not iterable
+2026-04-28 00:10:52 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:11:43 | INFO     | tool.preprocess | Предобработка | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:11:43 | ERROR    | tool.preprocess | Предобработка ошибка | Cannot perform 'ror_' with a dtyped [bool] array and scalar of type [bool]
+Traceback (most recent call last):
+  File "C:\Users\Asus\AppData\Roaming\Python\Python311\site-packages\pandas\core\ops\array_ops.py", line 369, in na_logical_op
+    result = op(x, y)
+             ^^^^^^^^
+  File "C:\Users\Asus\AppData\Roaming\Python\Python311\site-packages\pandas\core\roperator.py", line 59, in ror_
+    return operator.or_(right, left)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: ufunc 'bitwise_or' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Asus\AppData\Roaming\Python\Python311\site-packages\pandas\core\ops\array_ops.py", line 383, in na_logical_op
+    result = libops.scalar_binop(x, y, op)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas/_libs/ops.pyx", line 178, in pandas._libs.ops.scalar_binop
+ValueError: Buffer dtype mismatch, expected 'Python object' but got 'bool'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\smadimo\hse_smadimo_gp3\tools\tool_preprocess.py", line 59, in preprocess_data
+    df["is_junior"] = (level_col == "junior" | name_lower.str.contains("junior|intern")).astype(int)
+                                    ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  File "C:\Users\Asus\AppData\Roaming\Python\Python311\site-packages\pandas\core\ops\common.py", line 85, in new_method
+    return method(self, other)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\AppData\Roaming\Python\Python311\site-packages\pandas\core\arraylike.py", line 84, in __ror__
+    return self._logical_method(other, roperator.ror_)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\AppData\Roaming\Python\Python311\site-packages\pandas\core\series.py", line 6746, in _logical_method
+    res_values = ops.logical_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\AppData\Roaming\Python\Python311\site-packages\pandas\core\ops\array_ops.py", line 459, in logical_op
+    res_values = na_logical_op(lvalues, rvalues, op)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\AppData\Roaming\Python\Python311\site-packages\pandas\core\ops\array_ops.py", line 392, in na_logical_op
+    raise TypeError(
+TypeError: Cannot perform 'ror_' with a dtyped [bool] array and scalar of type [bool]
+2026-04-28 00:11:59 | INFO     | tool.preprocess | Предобработка | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:11:59 | INFO     | tool.preprocess | Предобработка завершена | rows=5000 | features=40 | salary_mean=158314
+2026-04-28 00:12:04 | INFO     | executor | LLM исправила код, попытка 2
+2026-04-28 00:12:04 | WARNING  | executor | Попытка 2/3 | ошибка: "value" parameter must be a scalar or dict, but you passed a "list"
+2026-04-28 00:12:07 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:13:31 | INFO     | agent | Запуск агента | model=qwen/qwen3-coder | file=data/hh_it_5000_final.csv
+2026-04-28 00:13:31 | INFO     | tool.parse | Парсинг HH.ru | query='Data Scientist Python ML Engineer'
+2026-04-28 00:13:31 | INFO     | tool.parse | Парсинг завершён | rows=5000 | file=data/hh_it_5000_final.csv
+2026-04-28 00:13:31 | INFO     | langchain_openai.chat_models._client_utils | langchain-openai detected system proxy configuration and no explicit `http_socket_options` / `http_client` / `http_async_client` / `openai_proxy`; skipping the custom `httpx` transport so httpx's env-proxy auto-detection applies. Pass `http_socket_options=[...]` to opt back into kernel-level TCP keepalive tuning on top of the env proxy.
+2026-04-28 00:13:34 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:13:34 | INFO     | agent | Tool call: load_and_explore_data | args={'filepath': 'data/hh_it_5000_final.csv'}
+2026-04-28 00:13:34 | INFO     | tool.load | EDA | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:13:35 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:13:38 | INFO     | tool.load | EDA завершён | rows=5000 | cols=13
+2026-04-28 00:13:38 | INFO     | agent | Tool result: {"rows": 5000, "columns": ["name", "experience", "employment", "schedule", "city", "company", "description", "skills", "category", "level", "salary_from", "salary_to", "salary"], "salary_columns": ["s
+2026-04-28 00:13:39 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:13:42 | INFO     | agent | Tool call: preprocess_data | args={'filepath': 'data/hh_it_5000_final.csv'}
+2026-04-28 00:13:42 | INFO     | tool.preprocess | Предобработка | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:13:42 | INFO     | tool.preprocess | Предобработка завершена | rows=5000 | features=40 | salary_mean=158314
+2026-04-28 00:13:42 | INFO     | agent | Tool result: {"status": "ok", "rows": 5000, "feature_cols": ["experience_years", "is_moscow", "is_spb", "is_remote", "is_top_city", "employment_score", "schedule_score", "level_score", "is_senior", "is_junior", "c
+2026-04-28 00:13:42 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:13:46 | INFO     | agent | Tool call: train_and_compare_models | args={'dummy': ''}
+2026-04-28 00:13:46 | INFO     | tool.train | Начало обучения моделей
+2026-04-28 00:13:46 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:13:54 | INFO     | tool.train | Обучение завершено | best=RandomForest | MAE=46,388 | R2=0.4573 | saved=True
+2026-04-28 00:13:54 | INFO     | tool.train |   Модель: RandomForest | MAE=46,388 | RMSE=63,012 | R2=0.4573
+2026-04-28 00:13:54 | INFO     | tool.train |   Модель: GradientBoosting | MAE=46,700 | RMSE=62,689 | R2=0.4628
+2026-04-28 00:13:54 | INFO     | tool.train |   Модель: Ridge | MAE=49,547 | RMSE=66,041 | R2=0.4038
+2026-04-28 00:13:54 | INFO     | agent | Tool result: {"status": "ok", "best_model": "RandomForest", "best_mae": 46388.38981417492, "best_rmse": 63011.99914783296, "best_r2": 0.45725025857127954, "all_models": [{"name": "RandomForest", "mae": 46388.38981
+2026-04-28 00:13:54 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:13:58 | INFO     | agent | Tool call: predict_salary | args={'vacancy_json': "{'name': 'Middle Python Developer', 'experience': 'between1And
+2026-04-28 00:13:58 | INFO     | tool.predict | Предсказание зарплаты | vacancy={'name': 'Middle Python Developer', 'experience': 'between1And3', 'employment': 
+2026-04-28 00:13:59 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:14:21 | ERROR    | tool.predict | Предсказание ошибка | Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+Traceback (most recent call last):
+  File "C:\Users\Asus\PycharmProjects\smadimo\hse_smadimo_gp3\tools\tool_predict.py", line 77, in predict_salary
+    vacancy = json.loads(vacancy_json)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Asus\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 353, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ^^^^^^^^^^^^^^^^^^^^^^
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+2026-04-28 00:14:21 | INFO     | agent | Tool result: {"status": "error", "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)", "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\Asus\\PycharmProject
+2026-04-28 00:14:21 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:14:23 | INFO     | agent | Tool call: predict_salary | args={'vacancy_json': '{"name": "Middle Python Developer", "experience": "between1And
+2026-04-28 00:14:23 | INFO     | tool.predict | Предсказание зарплаты | vacancy={"name": "Middle Python Developer", "experience": "between1And3", "employment": 
+2026-04-28 00:14:24 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:14:33 | INFO     | tool.predict | Предсказание: Middle Python Developer → 135,000 ₽ (модель: RandomForest)
+2026-04-28 00:14:33 | INFO     | agent | Tool result: {"status": "ok", "vacancy_name": "Middle Python Developer", "model_used": "RandomForest", "predicted_salary_rur": 135000, "predicted_salary_formatted": "135 000 ₽"}
+2026-04-28 00:14:34 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:14:35 | INFO     | agent | Tool call: generate_report | args={'dummy': ''}
+2026-04-28 00:14:35 | INFO     | agent | Tool result: {"status": "ok", "report_path": "reports\\report_20260428_001435.html", "metrics_saved": "memory\\best_metrics.json", "improved": null, "best_model": "RandomForest", "best_mae": 46388.38981417492}
+2026-04-28 00:14:36 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:14:39 | INFO     | agent | Агент завершил работу
+2026-04-28 00:17:22 | INFO     | agent | Запуск агента | model=qwen/qwen3-coder | file=data/hh_it_5000_final.csv
+2026-04-28 00:17:22 | INFO     | tool.parse | Парсинг HH.ru | query='Data Scientist Python ML Engineer'
+2026-04-28 00:17:22 | INFO     | tool.parse | Парсинг завершён | rows=5000 | file=data/hh_it_5000_final.csv
+2026-04-28 00:17:24 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:17:24 | INFO     | agent | Tool call: load_and_explore_data | args={'filepath': 'data/hh_it_5000_final.csv'}
+2026-04-28 00:17:24 | INFO     | tool.load | EDA | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:17:24 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:17:26 | INFO     | tool.load | EDA завершён | rows=5000 | cols=13
+2026-04-28 00:17:26 | INFO     | agent | Tool result: {"rows": 5000, "columns": ["name", "experience", "employment", "schedule", "city", "company", "description", "skills", "category", "level", "salary_from", "salary_to", "salary"], "salary_columns": ["s
+2026-04-28 00:17:27 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:17:29 | INFO     | agent | Tool call: preprocess_data | args={'filepath': 'data/hh_it_5000_final.csv'}
+2026-04-28 00:17:29 | INFO     | tool.preprocess | Предобработка | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:17:29 | INFO     | tool.preprocess | Предобработка завершена | rows=5000 | features=40 | salary_mean=158314
+2026-04-28 00:17:29 | INFO     | agent | Tool result: {"status": "ok", "rows": 5000, "feature_cols": ["experience_years", "is_moscow", "is_spb", "is_remote", "is_top_city", "employment_score", "schedule_score", "level_score", "is_senior", "is_junior", "c
+2026-04-28 00:17:30 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:17:33 | INFO     | agent | Tool call: train_and_compare_models | args={'dummy': ''}
+2026-04-28 00:17:33 | INFO     | tool.train | Начало обучения моделей
+2026-04-28 00:17:34 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:17:38 | INFO     | tool.train | Обучение завершено | best=RandomForest | MAE=46,388 | R2=0.4573 | saved=False
+2026-04-28 00:17:38 | INFO     | tool.train |   Модель: RandomForest | MAE=46,388 | RMSE=63,012 | R2=0.4573
+2026-04-28 00:17:38 | INFO     | tool.train |   Модель: GradientBoosting | MAE=46,700 | RMSE=62,689 | R2=0.4628
+2026-04-28 00:17:38 | INFO     | tool.train |   Модель: Ridge | MAE=49,547 | RMSE=66,041 | R2=0.4038
+2026-04-28 00:17:38 | INFO     | agent | Tool result: {"status": "ok", "best_model": "RandomForest", "best_mae": 46388.38981417492, "best_rmse": 63011.99914783296, "best_r2": 0.45725025857127954, "all_models": [{"name": "RandomForest", "mae": 46388.38981
+2026-04-28 00:17:39 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:17:42 | INFO     | agent | Tool call: predict_salary | args={'vacancy_json': '{"name": "Middle Python Developer", "experience": "noExperienc
+2026-04-28 00:17:42 | INFO     | tool.predict | Предсказание зарплаты | vacancy={"name": "Middle Python Developer", "experience": "noExperience", "employment": 
+2026-04-28 00:17:42 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:17:48 | INFO     | tool.predict | Предсказание: Middle Python Developer → 70,000 ₽ (модель: RandomForest)
+2026-04-28 00:17:48 | INFO     | agent | Tool result: {"status": "ok", "vacancy_name": "Middle Python Developer", "model_used": "RandomForest", "predicted_salary_rur": 70000, "predicted_salary_formatted": "70 000 ₽"}
+2026-04-28 00:17:48 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:17:50 | INFO     | agent | Tool call: generate_report | args={'dummy': ''}
+2026-04-28 00:17:50 | INFO     | agent | Tool result: {"status": "ok", "report_path": "reports\\report_20260428_001750.html", "metrics_saved": "memory\\best_metrics.json", "improved": false, "best_model": "RandomForest", "best_mae": 46388.38981417492}
+2026-04-28 00:17:52 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:17:54 | INFO     | agent | Агент завершил работу
+2026-04-28 00:23:12 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:23:20 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:23:52 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:24:20 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:24:50 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:26:23 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:27:01 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:27:03 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:27:08 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:29:35 | INFO     | agent | Запуск агента | model=qwen/qwen3-coder | file=data/hh_it_5000_final.csv
+2026-04-28 00:29:35 | INFO     | tool.parse | Парсинг HH.ru | query='Data Scientist Python ML Engineer'
+2026-04-28 00:29:36 | INFO     | tool.parse | Парсинг завершён | rows=5000 | file=data/hh_it_5000_final.csv
+2026-04-28 00:29:38 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:29:38 | INFO     | agent | Tool call: load_and_explore_data | args={'filepath': 'data/hh_it_5000_final.csv'}
+2026-04-28 00:29:38 | INFO     | tool.load | EDA | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:29:43 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:29:44 | INFO     | tool.load | EDA завершён | rows=5000 | cols=13
+2026-04-28 00:29:44 | INFO     | agent | Tool result: {"rows": 5000, "columns": ["name", "experience", "employment", "schedule", "city", "company", "description", "skills", "category", "level", "salary_from", "salary_to", "salary"], "salary_columns": ["s
+2026-04-28 00:29:46 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:29:48 | INFO     | agent | Tool call: preprocess_data | args={'filepath': 'data/hh_it_5000_final.csv'}
+2026-04-28 00:29:48 | INFO     | tool.preprocess | Предобработка | filepath=data/hh_it_5000_final.csv
+2026-04-28 00:29:48 | INFO     | tool.preprocess | Предобработка завершена | rows=5000 | features=40 | salary_mean=158314
+2026-04-28 00:29:48 | INFO     | agent | Tool result: {"status": "ok", "rows": 5000, "feature_cols": ["experience_years", "is_moscow", "is_spb", "is_remote", "is_top_city", "employment_score", "schedule_score", "level_score", "is_senior", "is_junior", "c
+2026-04-28 00:29:49 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:29:51 | INFO     | agent | Tool call: train_and_compare_models | args={'dummy': ''}
+2026-04-28 00:29:51 | INFO     | tool.train | Начало обучения моделей
+2026-04-28 00:29:53 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:29:57 | INFO     | tool.train | Обучение завершено | best=RandomForest | MAE=46,388 | R2=0.4573 | saved=False
+2026-04-28 00:29:57 | INFO     | tool.train |   Модель: RandomForest | MAE=46,388 | RMSE=63,012 | R2=0.4573
+2026-04-28 00:29:57 | INFO     | tool.train |   Модель: GradientBoosting | MAE=46,700 | RMSE=62,689 | R2=0.4628
+2026-04-28 00:29:57 | INFO     | tool.train |   Модель: Ridge | MAE=49,547 | RMSE=66,041 | R2=0.4038
+2026-04-28 00:29:57 | INFO     | agent | Tool result: {"status": "ok", "best_model": "RandomForest", "best_mae": 46388.38981417492, "best_rmse": 63011.99914783296, "best_r2": 0.45725025857127954, "all_models": [{"name": "RandomForest", "mae": 46388.38981
+2026-04-28 00:29:58 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:30:00 | INFO     | agent | Tool call: predict_salary | args={'vacancy_json': '{"name": "Аналитик", "experience": "between1And3", "employment
+2026-04-28 00:30:00 | INFO     | tool.predict | Предсказание зарплаты | vacancy={"name": "Аналитик", "experience": "between1And3", "employment": "full", "schedu
+2026-04-28 00:30:02 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:30:07 | INFO     | tool.predict | Предсказание: Аналитик → 140,000 ₽ (модель: RandomForest)
+2026-04-28 00:30:07 | INFO     | agent | Tool result: {"status": "ok", "vacancy_name": "Аналитик", "model_used": "RandomForest", "predicted_salary_rur": 140000, "predicted_salary_formatted": "140 000 ₽"}
+2026-04-28 00:30:10 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:30:11 | INFO     | agent | Tool call: generate_report | args={'dummy': ''}
+2026-04-28 00:30:11 | INFO     | agent | Tool result: {"status": "ok", "report_path": "reports\\report_20260428_003011.html", "metrics_saved": "memory\\best_metrics.json", "improved": false, "best_model": "RandomForest", "best_mae": 46388.38981417492}
+2026-04-28 00:30:12 | INFO     | httpx | HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-28 00:30:14 | INFO     | agent | Агент завершил работу
