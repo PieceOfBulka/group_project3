@@ -35,10 +35,15 @@ SYSTEM_PROMPT = """Ты — опытный ML-инженер, специализ
 
 def get_model(model_name: str | None = None) -> ChatOpenAI:
     return ChatOpenAI(
-        model=model_name or os.getenv("MODEL_NAME", "google/gemma-3-27b-it:free"),
+        model=model_name or os.getenv("MODEL_NAME", "meta-llama/llama-3.3-70b-instruct:free"),
         base_url="https://openrouter.ai/api/v1",
         api_key=os.getenv("API_KEY"),
         temperature=0.1,
+        model_kwargs={
+            "extra_body": {
+                "provider": {"require_parameters": True}
+            }
+        },
     )
 
 

@@ -21,11 +21,12 @@ with st.sidebar:
     model_name = st.selectbox(
         "LLM модель (агент)",
         [
-            "google/gemma-3-27b-it:free",
-            "openai/gpt-oss-120b:free",
-            "z-ai/glm-4.5-air:free",
+            "meta-llama/llama-3.3-70b-instruct:free",
             "deepseek/deepseek-v4-flash",
             "minimax/minimax-m2.7",
+            "openai/gpt-oss-120b:free",
+            "z-ai/glm-4.5-air:free",
+            "google/gemma-3-27b-it:free",
             "minimax/minimax-m2.5:free",
         ],
     )
